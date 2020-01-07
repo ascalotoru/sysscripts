@@ -9,9 +9,13 @@ help(){
   echo "Usage:"
   echo "-i    VMID"
   echo "-s    Destination storage"
-  echo "-h    Destination host"
+  echo "-h    Destination host. If set migrate the VM to the destination host."
   echo "Example:"
   echo "$0 -i 123 -s zfs_ssd -h proxmox02"
+}
+
+migrate(){
+  qm migrate $VMID $HOST_DEST --online
 }
 
 
@@ -24,9 +28,9 @@ do
     \? ) echo "Error"
         help
       exit 1 ;;
-    : ) echo "Option -$OPTARG requires an argument"
-      help
-      exit 1 ;;
+    # : ) echo "Option -$OPTARG requires an argument"
+    #   help
+    #   exit 1 ;;
   esac
 done
 
@@ -35,4 +39,7 @@ DISCOS="$(qm config $VMID | egrep "^virtio[0-9]|^scsi[0-9]" | awk '{print $1}' |
 for i in $DISCOS; do
   qm move_disk $VMID $i $STORAGE_DEST --delete
 done
-qm migrate $VMID $HOST_DEST --online
+if [ ! -z $HOST_DEST ]; then
+  migrate
+fi
+
