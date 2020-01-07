@@ -4,6 +4,17 @@ VMID=0
 STORAGE_DEST=""
 HOST_DEST=""
 
+help(){
+  echo "Moves VM disks to shared storage and then migrate to another host"
+  echo "Usage:"
+  echo "-i    VMID"
+  echo "-s    Destination storage"
+  echo "-h    Destination host"
+  echo "Example:"
+  echo "$0 -i 123 -s zfs_ssd -h proxmox02"
+}
+
+
 while getopts ":i:s:h" opt
 do
   case $opt in
@@ -11,8 +22,10 @@ do
     s ) STORAGE_DEST=$OPTARG ;;
     h ) HOST_DEST=$OPTARG ;;
     \? ) echo "Error"
+        help
       exit 1 ;;
     : ) echo "Option -$OPTARG requires an argument"
+      help
       exit 1 ;;
   esac
 done
