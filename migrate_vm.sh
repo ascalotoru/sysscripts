@@ -39,6 +39,7 @@ DISCOS="$(qm config $VMID | egrep "^virtio[0-9]|^scsi[0-9]" | awk '{print $1}' |
 for i in $DISCOS; do
   qm move_disk $VMID $i $STORAGE_DEST --delete
 done
+sleep 2
 if [ ! -z $HOST_DEST ]; then
   migrate
 fi
