@@ -15,7 +15,7 @@ help(){
 }
 
 
-while getopts ":i:s:h" opt
+while getopts "i:s:h:" opt
 do
   case $opt in
     i ) VMID=$OPTARG ;;
